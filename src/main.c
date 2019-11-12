@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
 
     /* create the window */
     main_window = SDL_CreateWindow(
-        "Claire's physics simulation",
+        "Physics Sim in pure C (press X to close)",
         SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED,
         WINDOW_DIM,
@@ -202,8 +202,9 @@ int main(int argc, char *argv[]) {
                 break;
             case SDL_KEYDOWN:
                 switch (event.key.keysym.sym) {
-                    case SDLK_a:
-                        printf("You pressed 'A'!\n");
+                    case SDLK_x:
+                        printf("Closing the program.\n");
+                        window_open = 0;
                         break;
                 }
                 break;
