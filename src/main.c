@@ -164,12 +164,10 @@ int main(int argc, char *argv[]) {
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
         SDL_RenderClear(renderer);
 
+
         // green foreground
         SDL_SetRenderDrawColor(renderer, 0, 255, 50, 255);
 
-
-        // draw the mouse
-        SDL_RenderDrawPoint(renderer, mouse_x, mouse_y);
 
         // draw the Particles
         for (i = 0; i < PARTICLE_CT; i++) {
@@ -179,6 +177,17 @@ int main(int argc, char *argv[]) {
                 particles[i]->y_pos
             );
         }
+
+        SDL_RenderPresent(renderer);
+
+        // we want the mouse particle to be a different color than everything else
+        SDL_SetRenderDrawColor(renderer, 255, 10, 0, 255);
+        // and a little bigger
+        SDL_RenderDrawPoint(renderer, mouse_x, mouse_y);
+        SDL_RenderDrawPoint(renderer, mouse_x-1, mouse_y);
+        SDL_RenderDrawPoint(renderer, mouse_x+1, mouse_y);
+        SDL_RenderDrawPoint(renderer, mouse_x, mouse_y-1);
+        SDL_RenderDrawPoint(renderer, mouse_x, mouse_y+1);
 
         SDL_RenderPresent(renderer);
 

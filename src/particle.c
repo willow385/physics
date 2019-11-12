@@ -2,7 +2,17 @@
 #include <time.h>
 #include <math.h>
 
+// size of the window
 #define WINDOW_DIM 400
+
+// amount of energy the particles retain when hitting the walls
+#define WALL_BOUNCINESS 0.2
+
+// acceleration of the points towards sources of gravity
+#define GRAVITY 0.005
+
+// amount of momentum particles lose each frame
+#define SPACE_DRAG 0.001
 
 typedef struct {
     float x_pos;
@@ -46,31 +56,35 @@ void update_particle(
     particle->x_pos += particle->x_momentum;
     particle->y_pos += particle->y_momentum;
 
+    particle->x_momentum *= (1.0 - SPACE_DRAG);
+    particle->y_momentum *= (1.0 - SPACE_DRAG);
+
     if (particle->x_pos < 0) {
         particle->x_pos = 0;
-        particle->x_momentum *= -0.8; // lose a little energy
+        particle->x_momentum *= -WALL_BOUNCINESS; // lose a little energy
     }
 
     if (particle->x_pos > WINDOW_DIM) {
         particle->x_pos = WINDOW_DIM;
-        particle->x_momentum *= -0.8;
+        particle->x_momentum *= -WALL_BOUNCINESS;
     }
 
     if (particle->y_pos < 0) {
         particle->y_pos = 0;
-        particle->y_momentum *= -0.8;
+        particle->y_momentum *= -WALL_BOUNCINESS;
     }
 
     if (particle->y_pos > WINDOW_DIM) {
         particle->y_pos = WINDOW_DIM;
-        particle->y_momentum *= -0.8;
+        particle->y_momentum *= -WALL_BOUNCINESS;
     }
 
-
-    if (particle->x_pos < grav_x) particle->x_momentum += 0.005;
-    if (particle->x_pos > grav_x) particle->x_momentum -= 0.005;
-    if (particle->y_pos < grav_y) particle->y_momentum += 0.005;
-    if (particle->y_pos > grav_y) particle->y_momentum -= 0.005;
+    /* wherever the source of gravity is,
+    things should accelerate towards it */
+    if (particle->x_pos < grav_x) particle->x_momentum += GRAVITY;
+    if (particle->x_pos > grav_x) particle->x_momentum -= GRAVITY;
+    if (particle->y_pos < grav_y) particle->y_momentum += GRAVITY;
+    if (particle->y_pos > grav_y) particle->y_momentum -= GRAVITY;
 }
 
 void collide(Particle *a, Particle b, int coinflip) {
