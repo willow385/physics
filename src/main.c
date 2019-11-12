@@ -31,7 +31,7 @@ int main(int argc, char *argv[]) {
 
     SDL_Init(SDL_INIT_VIDEO);
 
-    /* Now I'm going to create a window, 600x600 pixels, centred in the screen */
+    /* create the window */
     main_window = SDL_CreateWindow(
         "Claire's physics simulation",
         SDL_WINDOWPOS_CENTERED,
@@ -41,14 +41,14 @@ int main(int argc, char *argv[]) {
         0
     );
 
-    /* and a renderer so we can draw things on that window */
+    /* create a renderer */
     renderer = SDL_CreateRenderer(
         main_window,
         0,
         0
     );
 
-    /* Make sure that the user is properly bewildered if something goes wrong */
+    /* Null pointer check */
     if (main_window == NULL || renderer == NULL) {
         printf("Error! Something went horribly wrong!\n");
         printf("Error: %s\n", SDL_GetError());
@@ -56,14 +56,16 @@ int main(int argc, char *argv[]) {
     }
 
 
-    int window_open = 1;
+    int window_open = 1; // will be set to 0 when it's time to close the window
     SDL_Event event;
 
 
+    // This stuff will hold info about the mouse's state
     int mouse_x, mouse_y;
     int prev_mouse_x, prev_mouse_y;
     Particle *mouse_particle = create_particle(0, 0, 0, 0);
 
+    // create the particles
     Particle **particles = malloc(PARTICLE_CT * sizeof(Particle *));
     int i;
     for (i = 0; i < PARTICLE_CT; i++) {
