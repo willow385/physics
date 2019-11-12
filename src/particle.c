@@ -48,41 +48,40 @@ void update_particle(
 
     if (particle->x_pos < 0) {
         particle->x_pos = 0;
-        particle->x_pos *= -1;
+        particle->x_momentum *= -0.8; // lose a little energy
     }
 
     if (particle->x_pos > WINDOW_DIM) {
         particle->x_pos = WINDOW_DIM;
-        particle->x_pos *= -1;
+        particle->x_momentum *= -0.8;
     }
 
     if (particle->y_pos < 0) {
         particle->y_pos = 0;
-        particle->y_pos *= -1;
+        particle->y_momentum *= -0.8;
     }
 
     if (particle->y_pos > WINDOW_DIM) {
         particle->y_pos = WINDOW_DIM;
-        particle->y_pos *= -1;
+        particle->y_momentum *= -0.8;
     }
 
 
-    if (particle->x_pos < grav_x) particle->x_momentum += 1;
-    if (particle->x_pos > grav_x) particle->x_momentum -= 1;
-    if (particle->y_pos < grav_y) particle->y_momentum += 1;
-    if (particle->y_pos > grav_y) particle->y_momentum -= 1;
+    if (particle->x_pos < grav_x) particle->x_momentum += 0.005;
+    if (particle->x_pos > grav_x) particle->x_momentum -= 0.005;
+    if (particle->y_pos < grav_y) particle->y_momentum += 0.005;
+    if (particle->y_pos > grav_y) particle->y_momentum -= 0.005;
 }
 
-void collide(Particle *a, Particle *b) {
-    srand(time(NULL));
+void collide(Particle *a, Particle b, int coinflip) {
+    a->x_momentum = b.y_momentum;
+    a->y_momentum = b.x_momentum;
 
-    float a_orig_x_m = a->x_momentum;
-    float a_orig_y_m = a->y_momentum;
-    float b_orig_x_m = b->y_momentum;
-    float b_orig_y_m = b->y_momentum;
+    if (fabs(b.x_pos - a->x_pos) < 1.5) {
+        a->x_pos -= coinflip;
+    }
 
-    a->x_momentum = b_orig_y_m;
-    a->y_momentum = b_orig_x_m;
-    b->x_momentum = a_orig_y_m;
-    b->y_momentum = a_orig_x_m;
+    if (fabs(b.y_pos - a->y_pos) < 1.5) {
+        a->y_pos -= coinflip;
+    }
 }

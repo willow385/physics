@@ -55,6 +55,6 @@ void update_particle(Particle *particle, int grav_x, int grav_y);
  * Function to collide two particles together.
  *
  * @param a pointer to the first particle
- * @param b pointer to the second particle
+ * @param b the second particle
  */
-void collide(Particle *a, Particle *b);
+void collide(Particle *a, Particle b, int coinflip);

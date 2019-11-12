@@ -75,6 +75,13 @@ int main(int argc, char *argv[]) {
         );
     }
 
+    /* create a place to store the state of our particles as they were in
+       the previous frame */
+    Particle **prev_frame_particles = malloc(PARTICLE_CT * sizeof(Particle *));
+    for (i = 0; i < PARTICLE_CT; i++) {
+        prev_frame_particles[i] = create_particle(0, 0, 0, 0);
+    }
+
     while (window_open) {
         // record the old mouse position
         prev_mouse_x = mouse_x;
@@ -94,41 +101,63 @@ int main(int argc, char *argv[]) {
 
         // mouse is on our window? then hide the cursor
         if (
-            (mouse_x > 0 && mouse_x < 600)
+            (mouse_x > 0 && mouse_x < WINDOW_DIM)
         &&
-            (mouse_y > 0 && mouse_y < 600)
+            (mouse_y > 0 && mouse_y < WINDOW_DIM)
         ) {
             SDL_ShowCursor(SDL_DISABLE);
         } else {
             SDL_ShowCursor(SDL_ENABLE);
         }
 
-        // update our Particles
-        int j;
+        // first we copy the Particles' old properties
         for (i = 0; i < PARTICLE_CT; i++) {
-            update_particle(particles[i], mouse_x, mouse_y);
+            copy_particle(prev_frame_particles[i], *particles[i]);
+        }
+        // then we calculate the collisions
+        int j, coinflip = -1;
+        for (i = 0; i < PARTICLE_CT; i++) {
             for (j = 0; j < PARTICLE_CT; j++) {
-                if (j != i) {
-                    if (is_distance(
-                        particles[i]->x_pos,
-                        particles[i]->y_pos,
-                        particles[j]->x_pos,
-                        particles[j]->y_pos,
-                        4.0
-                    )) {
-                        collide(particles[i], particles[j]);
+                if (i != j) {
+                    if (
+                        is_distance(
+                            particles[i]->x_pos,
+                            particles[i]->y_pos,
+                            prev_frame_particles[j]->x_pos,
+                            prev_frame_particles[j]->y_pos,
+                            1.5
+                        )
+                    ) {
+                        collide(
+                            particles[i],
+                            *prev_frame_particles[j],
+                            coinflip
+                        );
+                        coinflip *= -1;
                     }
                 }
             }
-            if (is_distance(
-                mouse_particle->x_pos,
-                mouse_particle->y_pos,
-                particles[i]->x_pos,
-                particles[i]->y_pos,
-                4.0
-            )) {
-                collide(particles[i], mouse_particle);
+
+            // collide with the mouse particle, too
+            if (
+                is_distance(
+                    particles[i]->x_pos,
+                    particles[i]->y_pos,
+                    (float) mouse_x,
+                    (float) mouse_y,
+                    1.5
+                )
+            ) {
+                collide(
+                    particles[i],
+                    *mouse_particle,
+                    coinflip
+                );
+                coinflip *= -1;
             }
+
+            // finally we can update them
+            update_particle(particles[i], mouse_x, mouse_y);
         }
 
         // black background
