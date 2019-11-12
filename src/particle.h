@@ -46,5 +46,15 @@ void free_particle(Particle *particle);
  * Function to update a particle's position.
  *
  * @param particle pointer to the Particle to update
+ * @param grav_x x-position towards which the particle shall go
+ * @param grav_y y-position towards which the particle shall go
  */
-void update_particle(Particle *particle);
+void update_particle(Particle *particle, int grav_x, int grav_y);
+
+/**
+ * Function to collide two particles together.
+ *
+ * @param a pointer to the first particle
+ * @param b pointer to the second particle
+ */
+void collide(Particle *a, Particle *b);

@@ -17,10 +17,13 @@
 
 #include <SDL2/SDL.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
 #include "geometry.h"
 #include "particle.h"
 
-#define PARTICLE_CT 16
+#define PARTICLE_CT 256
+#define WINDOW_DIM 400
 
 int main(int argc, char *argv[]) {
     SDL_Renderer *renderer;
@@ -33,8 +36,8 @@ int main(int argc, char *argv[]) {
         "Claire's physics simulation",
         SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED,
-        600,
-        600,
+        WINDOW_DIM,
+        WINDOW_DIM,
         0
     );
 
@@ -56,13 +59,38 @@ int main(int argc, char *argv[]) {
     int window_open = 1;
     SDL_Event event;
 
-    int mouse_x, mouse_y;
 
-    Particle *particle = create_particle(100, 100, 1.0, 0.1);
+    int mouse_x, mouse_y;
+    int prev_mouse_x, prev_mouse_y;
+    Particle *mouse_particle = create_particle(0, 0, 0, 0);
+
+    Particle **particles = malloc(PARTICLE_CT * sizeof(Particle *));
+    int i;
+    for (i = 0; i < PARTICLE_CT; i++) {
+        particles[i] = create_particle(
+            (WINDOW_DIM / 2) + 20 * sin(i),
+            (WINDOW_DIM / 2) + 20 * cos(i),
+            0,
+            0
+        );
+    }
 
     while (window_open) {
-        // find the mouse position
-        SDL_GetMouseState(&mouse_x, &mouse_y);
+        // record the old mouse position
+        prev_mouse_x = mouse_x;
+        prev_mouse_y = mouse_y;
+
+        // get the new mouse position
+        SDL_GetMouseState(
+            &mouse_x,
+            &mouse_y
+        );
+
+        // update the mouse particle
+        mouse_particle->x_pos = (float) mouse_x;
+        mouse_particle->y_pos = (float) mouse_y;
+        mouse_particle->x_momentum = (float) mouse_x - prev_mouse_x;
+        mouse_particle->y_momentum = (float) mouse_y - prev_mouse_y;
 
         // mouse is on our window? then hide the cursor
         if (
@@ -75,8 +103,33 @@ int main(int argc, char *argv[]) {
             SDL_ShowCursor(SDL_ENABLE);
         }
 
-        // update our lonesome Particle
-        update_particle(particle);
+        // update our Particles
+        int j;
+        for (i = 0; i < PARTICLE_CT; i++) {
+            update_particle(particles[i], mouse_x, mouse_y);
+            for (j = 0; j < PARTICLE_CT; j++) {
+                if (j != i) {
+                    if (is_distance(
+                        particles[i]->x_pos,
+                        particles[i]->y_pos,
+                        particles[j]->x_pos,
+                        particles[j]->y_pos,
+                        4.0
+                    )) {
+                        collide(particles[i], particles[j]);
+                    }
+                }
+            }
+            if (is_distance(
+                mouse_particle->x_pos,
+                mouse_particle->y_pos,
+                particles[i]->x_pos,
+                particles[i]->y_pos,
+                4.0
+            )) {
+                collide(particles[i], mouse_particle);
+            }
+        }
 
         // black background
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
@@ -85,18 +138,18 @@ int main(int argc, char *argv[]) {
         // green foreground
         SDL_SetRenderDrawColor(renderer, 0, 255, 50, 255);
 
-        // check to see which points are the right distance from the mouse
-        int x, y;
-        for (x = mouse_x - 20; x < mouse_x + 20; x++) {
-            for (y = mouse_y - 20; y < mouse_y + 20; y++) {
-                if (is_distance(mouse_x, mouse_y, x, y, 16.0)) {
-                    SDL_RenderDrawPoint(renderer, x, y);
-                }
-            }
-        }
 
-        // draw the Particle
-        SDL_RenderDrawPoint(renderer, particle->x_pos, particle->y_pos);
+        // draw the mouse
+        SDL_RenderDrawPoint(renderer, mouse_x, mouse_y);
+
+        // draw the Particles
+        for (i = 0; i < PARTICLE_CT; i++) {
+            SDL_RenderDrawPoint(
+                renderer,
+                particles[i]->x_pos,
+                particles[i]->y_pos
+            );
+        }
 
         SDL_RenderPresent(renderer);
 
@@ -111,14 +164,18 @@ int main(int argc, char *argv[]) {
                 switch (event.key.keysym.sym) {
                     case SDLK_a:
                         printf("You pressed 'A'!\n");
-                        printf("Mouse was at (%d, %d)\n", mouse_x, mouse_y);
                         break;
                 }
                 break;
         }
     }
 
-    free_particle(particle);
+    for (i = 0; i < PARTICLE_CT; i++) {
+        free_particle(particles[i]);
+    }
+
+    free_particle(mouse_particle);
+    free(particles);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(main_window);
     SDL_Quit();
