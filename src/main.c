@@ -22,17 +22,19 @@
 #include "geometry.h"
 #include "particle.h"
 
+/* number of particles; the program lags on my computer
+   if this number is higher than 300 or so because I have
+   a very old computer */
 #define PARTICLE_CT 256
+
+// width & height of the window
 #define WINDOW_DIM 400
 
 int main(int argc, char *argv[]) {
-    SDL_Renderer *renderer;
-    SDL_Window *main_window;
-
     SDL_Init(SDL_INIT_VIDEO);
 
     /* create the window */
-    main_window = SDL_CreateWindow(
+    SDL_Window *main_window = SDL_CreateWindow(
         "Physics Sim in pure C (press X to close)",
         SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED,
@@ -42,7 +44,7 @@ int main(int argc, char *argv[]) {
     );
 
     /* create a renderer */
-    renderer = SDL_CreateRenderer(
+    SDL_Renderer *renderer = SDL_CreateRenderer(
         main_window,
         0,
         0
@@ -55,10 +57,8 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-
     int window_open = 1; // will be set to 0 when it's time to close the window
-    SDL_Event event;
-
+    SDL_Event event; // used to check for keyboard input
 
     // This stuff will hold info about the mouse's state
     int mouse_x, mouse_y;
@@ -70,6 +70,8 @@ int main(int argc, char *argv[]) {
     int i;
     for (i = 0; i < PARTICLE_CT; i++) {
         particles[i] = create_particle(
+            /* The particles start out in a circle near
+            the center of the screen */
             (WINDOW_DIM / 2) + 20 * sin(i),
             (WINDOW_DIM / 2) + 20 * cos(i),
             0,
@@ -121,6 +123,8 @@ int main(int argc, char *argv[]) {
         for (i = 0; i < PARTICLE_CT; i++) {
             for (j = 0; j < PARTICLE_CT; j++) {
                 if (i != j) {
+
+                    // particles collide if they're within 1.5 pixels of eachother
                     if (
                         is_distance(
                             particles[i]->x_pos,
@@ -136,6 +140,8 @@ int main(int argc, char *argv[]) {
                             coinflip
                         );
                         coinflip *= -1;
+                        /* Look in the defintion of collide() in particles.c
+                        to understand the purpose of `coinflip`. */
                     }
                 }
             }
@@ -158,7 +164,7 @@ int main(int argc, char *argv[]) {
                 coinflip *= -1;
             }
 
-            // finally we can update them
+            // Update the properties of each particle
             update_particle(particles[i], mouse_x, mouse_y);
         }
 
@@ -193,6 +199,7 @@ int main(int argc, char *argv[]) {
 
         SDL_RenderPresent(renderer);
 
+        // We want to check to see if the close button or the X key have been pushed
         SDL_PollEvent(&event);
         switch (event.type) {
             case SDL_QUIT:
@@ -211,6 +218,7 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    // Now it's time to clean everything up
     for (i = 0; i < PARTICLE_CT; i++) {
         free_particle(particles[i]);
     }
