@@ -22,13 +22,16 @@
 #include "geometry.h"
 #include "particle.h"
 
+
 /* number of particles; the program lags on my computer
    if this number is higher than 300 or so because I have
    a very old computer */
 #define PARTICLE_CT 256
 
+
 // width & height of the window
 #define WINDOW_DIM 400
+
 
 int main(int argc, char *argv[]) {
     SDL_Init(SDL_INIT_VIDEO);
