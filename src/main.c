@@ -26,7 +26,7 @@
 /* number of particles; the program lags on my computer
    if this number is higher than 300 or so because I have
    a very old computer */
-#define PARTICLE_CT 256
+#define PARTICLE_CT 512
 
 
 // width & height of the window
@@ -122,9 +122,11 @@ int main(int argc, char *argv[]) {
             copy_particle(prev_frame_particles[i], *particles[i]);
         }
         // then we calculate the collisions
-        int j, coinflip = -1;
+        int j, coinflip = 0;
         for (i = 0; i < PARTICLE_CT; i++) {
+            if (coinflip > 3) coinflip = 0;
             for (j = 0; j < PARTICLE_CT; j++) {
+                if (coinflip > 3) coinflip = 0;
                 if (i != j) {
 
                     // particles collide if they're within 1.5 pixels of eachother
@@ -142,7 +144,7 @@ int main(int argc, char *argv[]) {
                             *prev_frame_particles[j],
                             coinflip
                         );
-                        coinflip *= -1;
+                        coinflip++;
                         /* Look in the defintion of collide() in particles.c
                         to understand the purpose of `coinflip`. */
                     }
@@ -164,7 +166,7 @@ int main(int argc, char *argv[]) {
                     *mouse_particle,
                     coinflip
                 );
-                coinflip *= -1;
+                coinflip++;
             }
 
             // Update the properties of each particle

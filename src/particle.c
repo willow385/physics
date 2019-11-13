@@ -91,11 +91,18 @@ void collide(Particle *a, Particle b, int coinflip) {
     a->x_momentum = b.y_momentum;
     a->y_momentum = b.x_momentum;
 
-    if (fabs(b.x_pos - a->x_pos) < 1.5) {
-        a->x_pos -= coinflip;
-    }
-
-    if (fabs(b.y_pos - a->y_pos) < 1.5) {
-        a->y_pos -= coinflip;
+    switch (coinflip) {
+        case 0:
+            a->x_pos -= 1;
+            break;
+        case 1:
+            a->y_pos += 1;  
+            break;
+        case 2:
+            a->x_pos += 1;
+            break;
+        case 3:
+            a->y_pos -= 1;
+            break;
     }
 }
