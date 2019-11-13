@@ -26,7 +26,7 @@
 /* number of particles; the program lags on my computer
    if this number is higher than 300 or so because I have
    a very old computer */
-#define PARTICLE_CT 512
+#define PARTICLE_CT 256
 
 
 // width & height of the window
