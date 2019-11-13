@@ -122,11 +122,11 @@ int main(int argc, char *argv[]) {
             copy_particle(prev_frame_particles[i], *particles[i]);
         }
         // then we calculate the collisions
-        int j, coinflip = 0;
+        int j, bounce_direction = 0;
         for (i = 0; i < PARTICLE_CT; i++) {
-            if (coinflip > 3) coinflip = 0;
+            if (bounce_direction > 3) bounce_direction = 0;
             for (j = 0; j < PARTICLE_CT; j++) {
-                if (coinflip > 3) coinflip = 0;
+                if (bounce_direction > 3) bounce_direction = 0;
                 if (i != j) {
 
                     // particles collide if they're within 1.5 pixels of eachother
@@ -142,11 +142,11 @@ int main(int argc, char *argv[]) {
                         collide(
                             particles[i],
                             *prev_frame_particles[j],
-                            coinflip
+                            bounce_direction
                         );
-                        coinflip++;
+                        bounce_direction++;
                         /* Look in the defintion of collide() in particles.c
-                        to understand the purpose of `coinflip`. */
+                        to understand the purpose of `bounce_direction`. */
                     }
                 }
             }
@@ -164,9 +164,9 @@ int main(int argc, char *argv[]) {
                 collide(
                     particles[i],
                     *mouse_particle,
-                    coinflip
+                    bounce_direction
                 );
-                coinflip++;
+                bounce_direction++;
             }
 
             // Update the properties of each particle

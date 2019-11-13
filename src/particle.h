@@ -56,6 +56,6 @@ void update_particle(Particle *particle, int grav_x, int grav_y);
  *
  * @param a pointer to the first particle
  * @param b the second particle
- * @param coinflip direction to move a particle if it's touching another particle
+ * @param bounce_direction direction to move a particle if it's touching another particle
  */
-void collide(Particle *a, Particle b, int coinflip);
+void collide(Particle *a, Particle b, int bounce_direction);

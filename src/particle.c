@@ -87,11 +87,11 @@ void update_particle(
     if (particle->y_pos > grav_y) particle->y_momentum -= GRAVITY;
 }
 
-void collide(Particle *a, Particle b, int coinflip) {
+void collide(Particle *a, Particle b, int bounce_direction) {
     a->x_momentum = b.y_momentum;
     a->y_momentum = b.x_momentum;
 
-    switch (coinflip) {
+    switch (bounce_direction) {
         case 0:
             a->x_pos -= 1;
             break;
