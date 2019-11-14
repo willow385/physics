@@ -14,5 +14,5 @@ jobs:
     - name: make
       run: ./make.sh
     - name: run
-      run: ./physics.x86
+      run: startx && ./physics.x86
 
