@@ -1,0 +1,16 @@
+name: C CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v1
+    - name: build
+      run: ./make.sh
+    - name: run
+      run: ./physics.x86
+
