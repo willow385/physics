@@ -14,5 +14,5 @@ jobs:
     - name: make
       run: ./make.sh
     - name: run
-      run: startx && ./physics.x86
+      run: echo "No tests have been written yet; the workflow only tests to see if it compiles."
 
