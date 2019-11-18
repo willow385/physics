@@ -132,8 +132,10 @@ int main(int argc, char *argv[]) {
                     // particles collide if they're within 1.5 pixels of eachother
                     if (
                         is_distance(
-                            (int) particles[i]->x_pos - (int) prev_frame_particles[j]->x_pos,
-                            (int) particles[i]->y_pos - (int) prev_frame_particles[j]->y_pos,
+                            particles[i]->x_pos,
+                            particles[i]->y_pos,
+                            prev_frame_particles[j]->x_pos,
+                            prev_frame_particles[j]->y_pos,
                             1.5
                         )
                     ) {
@@ -152,8 +154,10 @@ int main(int argc, char *argv[]) {
             // collide with the mouse particle, too
             if (
                 is_distance(
-                    (int) particles[i]->x_pos - mouse_x,
-                    (int) particles[i]->y_pos - mouse_y,
+                    particles[i]->x_pos,
+                    particles[i]->y_pos,
+                    (float) mouse_x,
+                    (float) mouse_y,
                     1.5
                 )
             ) {
