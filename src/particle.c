@@ -81,10 +81,13 @@ void update_particle(
 
     /* wherever the source of gravity is,
     things should accelerate towards it */
-    if (particle->x_pos < grav_x) particle->x_momentum += GRAVITY;
-    if (particle->x_pos > grav_x) particle->x_momentum -= GRAVITY;
-    if (particle->y_pos < grav_y) particle->y_momentum += GRAVITY;
-    if (particle->y_pos > grav_y) particle->y_momentum -= GRAVITY;
+    float y_diff = particle->y_pos - grav_y;
+    float x_diff = particle->x_pos - grav_x;
+    float hypot = sqrt(pow(y_diff, 2) + pow(x_diff, 2));
+    float x_component = GRAVITY * (x_diff / hypot);
+    float y_component = GRAVITY * (y_diff / hypot);
+    particle->x_momentum += x_component;
+    particle->y_momentum += y_component;
 }
 
 void collide(Particle *a, Particle b, int bounce_direction) {
@@ -96,7 +99,7 @@ void collide(Particle *a, Particle b, int bounce_direction) {
             a->x_pos -= 1;
             break;
         case 1:
-            a->y_pos += 1;  
+            a->y_pos += 1;
             break;
         case 2:
             a->x_pos += 1;
