@@ -9,10 +9,10 @@
 #define WALL_BOUNCINESS 0.2
 
 // acceleration of the points towards sources of gravity
-#define GRAVITY 0.005
+#define GRAVITY 0.2
 
 // amount of momentum particles lose each frame
-#define SPACE_DRAG 0.001
+#define SPACE_DRAG 0.002
 
 typedef struct {
     float x_pos;

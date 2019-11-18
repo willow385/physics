@@ -18,6 +18,7 @@
 #include <SDL2/SDL.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <math.h>
 #include "geometry.h"
 #include "particle.h"
@@ -31,6 +32,10 @@
 
 // width & height of the window
 #define WINDOW_DIM 400
+
+
+// microseconds between each frame refresh
+#define FRAME_DELAY 16667
 
 
 int main(int argc, char *argv[]) {
@@ -90,6 +95,8 @@ int main(int argc, char *argv[]) {
     }
 
     while (window_open) {
+        usleep(FRAME_DELAY);
+
         // record the old mouse position
         prev_mouse_x = mouse_x;
         prev_mouse_y = mouse_y;
@@ -132,10 +139,10 @@ int main(int argc, char *argv[]) {
                     // particles collide if they're within 1.5 pixels of eachother
                     if (
                         is_distance(
-                            particles[i]->x_pos,
-                            particles[i]->y_pos,
-                            prev_frame_particles[j]->x_pos,
-                            prev_frame_particles[j]->y_pos,
+                            (int)particles[i]->x_pos,
+                            (int)particles[i]->y_pos,
+                            (int)prev_frame_particles[j]->x_pos,
+                            (int)prev_frame_particles[j]->y_pos,
                             1.5
                         )
                     ) {
@@ -154,10 +161,10 @@ int main(int argc, char *argv[]) {
             // collide with the mouse particle, too
             if (
                 is_distance(
-                    particles[i]->x_pos,
-                    particles[i]->y_pos,
-                    (float) mouse_x,
-                    (float) mouse_y,
+                    (int) particles[i]->x_pos,
+                    (int) particles[i]->y_pos,
+                    mouse_x,
+                    mouse_y,
                     1.5
                 )
             ) {
