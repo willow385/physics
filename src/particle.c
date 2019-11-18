@@ -86,8 +86,8 @@ void update_particle(
     float hypot = sqrt(pow(y_diff, 2) + pow(x_diff, 2));
     float x_component = GRAVITY * (x_diff / hypot);
     float y_component = GRAVITY * (y_diff / hypot);
-    particle->x_momentum += x_component;
-    particle->y_momentum += y_component;
+    particle->x_momentum -= x_component;
+    particle->y_momentum -= y_component;
 }
 
 void collide(Particle *a, Particle b, int bounce_direction) {
