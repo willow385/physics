@@ -12,7 +12,7 @@ jobs:
     - name: get-dependencies
       run: sudo apt-get install libsdl2-dev
     - name: make
-      run: ./make.sh
+      run: ./gccmake.sh
     - name: run
       run: echo "No tests have been written yet; the workflow only tests to see if it compiles."
 
