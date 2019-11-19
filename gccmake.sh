@@ -2,10 +2,10 @@
 # This script will compile the program into a binary named "physics.x86".
 
 cd src;
-gcc -c geometry.c -lm;
-gcc -c particle.c;
+gcc -c -O3 geometry.c -lm;
+gcc -c -O3 particle.c;
 cd ..;
-gcc  src/main.c\
+gcc -O3 src/main.c\
        src/geometry.o\
        src/particle.o\
     -o physics.x86\
