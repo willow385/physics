@@ -74,7 +74,7 @@ int main(int argc, char *argv[]) {
     Particle *mouse_particle = create_particle(0, 0, 0, 0);
 
     // create the particles
-    Particle **particles = malloc(PARTICLE_CT * sizeof(Particle *));
+    Particle **particles = (Particle **) malloc(PARTICLE_CT * sizeof(Particle *));
     int i;
     for (i = 0; i < PARTICLE_CT; i++) {
         particles[i] = create_particle(
@@ -89,7 +89,7 @@ int main(int argc, char *argv[]) {
 
     /* create a place to store the state of our particles as they were in
        the previous frame */
-    Particle **prev_frame_particles = malloc(PARTICLE_CT * sizeof(Particle *));
+    Particle **prev_frame_particles = (Particle **) malloc(PARTICLE_CT * sizeof(Particle *));
     for (i = 0; i < PARTICLE_CT; i++) {
         prev_frame_particles[i] = create_particle(0, 0, 0, 0);
     }
