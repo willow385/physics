@@ -41,6 +41,8 @@
 int main(int argc, char *argv[]) {
     SDL_Init(SDL_INIT_VIDEO);
 
+    printf("Creating the window...");
+
     /* create the window */
     SDL_Window *main_window = SDL_CreateWindow(
         "Physics Sim in pure C (press X to close)",
@@ -60,10 +62,12 @@ int main(int argc, char *argv[]) {
 
     /* Null pointer check */
     if (main_window == NULL || renderer == NULL) {
-        printf("Error! Something went horribly wrong!\n");
+        printf("\nError! Something went horribly wrong!\n");
         printf("Error: %s\n", SDL_GetError());
         return 1;
     }
+
+    printf(" done.\n");
 
     int window_open = 1; // will be set to 0 when it's time to close the window
     SDL_Event event; // used to check for keyboard input
@@ -93,6 +97,8 @@ int main(int argc, char *argv[]) {
     for (i = 0; i < PARTICLE_CT; i++) {
         prev_frame_particles[i] = create_particle(0, 0, 0, 0);
     }
+
+    printf("Press the X key to exit\n");
 
     while (window_open) {
         usleep(FRAME_DELAY);
