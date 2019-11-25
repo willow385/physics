@@ -20,3 +20,5 @@ called `physics.x86` which is executable. Some other make rules:
     prof - make a program that will output gmon.out for gprof.
     clean-prof - remove both the executable and gmon.out.
     clean-asm - remove Assembly files, if present, from /src/.
+
+See also https://github.com/DanteFalzone0/physics-rs.
