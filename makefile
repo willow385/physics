@@ -1,4 +1,5 @@
 # specify your own C compiler if you don't have gcc
+# change from `gcc` to `cc` for FreeBSD
 CC = gcc
 
 
@@ -23,6 +24,7 @@ PROF = -pg -Wall
 
 
 # flags for linking SDL2
+# change to `SDL2 = -D_REENTRANT -I/usr/local/include -L/usr/local/lib -lSDL2` for FreeBSD
 SDL2 = -D_REENTRANT -I/usr/include/SDL2 -lSDL2
 
 
