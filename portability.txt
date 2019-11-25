@@ -1,0 +1,5 @@
+
+*** Attention users of FreeBSD ***
+A lovely individual has recommended that these modifications be added to the makefile to compile on FreeBSD:
+> replace "CC = gcc" with "CC = gcc".
+> replace "SDL2 = -D_REENTRANT -I/usr/include/SDL2 -lSDL2" with "SDL2 = -D_REENTRANT -I/usr/local/include -L/usr/local/lib -lSDL2".
