@@ -158,7 +158,7 @@ int main(int argc, char *argv[]) {
                             bounce_direction
                         );
                         bounce_direction++;
-                        /* Look in the defintion of collide() in particles.c
+                        /* Look in the definition of collide() in particles.c
                         to understand the purpose of `bounce_direction`. */
                     }
                 }
